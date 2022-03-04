@@ -1,6 +1,13 @@
 import { useUniswapPriceQuery } from 'hooks/ERC20UniswapPrice'
 import { useSushiswapPriceQuery } from 'hooks/ERC20SushiswapPrice'
-import { CSSProperties } from 'react'
+import { useContext, CSSProperties } from 'react'
+
+import { SwapWidget } from '@uniswap/widgets/dist/index.js'
+import '@uniswap/widgets/dist/fonts.css'
+
+import { NetworkContext } from 'contexts/networkContext'
+
+import { readNetwork } from 'constants/networks'
 
 import TokenAMMPriceRow from './TokenAMMPriceRow'
 
@@ -30,6 +37,8 @@ export default function AMMPrices({
       tokenAddress,
     })
 
+  const { signingProvider } = useContext(NetworkContext)
+
   return (
     <div style={{ ...style }}>
       <TokenAMMPriceRow
@@ -39,6 +48,12 @@ export default function AMMPrices({
         WETHPrice={uniswapPriceData?.WETHPrice.toFixed(0)}
         loading={uniswapLoading}
         style={{ marginBottom: '0.5rem' }}
+      />
+      <SwapWidget
+        jsonRpcEndpoint={readNetwork.rpcUrl}
+        provider={signingProvider}
+        defaultInputAddress="NATIVE"
+        // defaultInputAmount="1"
       />
       <TokenAMMPriceRow
         exchangeName="Sushiswap"
